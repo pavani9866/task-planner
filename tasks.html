@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #000;
+            --input-bg: #fff;
+            --btn-bg: #28a745;
+            --btn-text: #fff;
+            --delete-bg: #dc3545;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-item {
+            background: var(--input-bg);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background: var(--delete-bg);
+            color: white;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+
+        #undo-container {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: #ffc107;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        #undo-btn {
+            background: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #undo-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task List</h1>
+
+        <ul id="task-list" class="task-list"></ul>
+
+        <div id="undo-container">
+            Task deleted! <button id="undo-btn">Undo</button>
+        </div>
+
+        <button onclick="clearTasks()">Clear All Tasks</button>
+        <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+        let deletedTask = null;
+        let deletedTaskIndex = null;
+
+        function loadTasks() {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            let taskList = document.getElementById("task-list");
+            taskList.innerHTML = "";
+
+            tasks.forEach((task, index) => {
+                let li = document.createElement("li");
+                li.classList.add("task-item");
+
+                let taskContent = document.createElement("span");
+                taskContent.textContent = task.task; // Only showing task name
+
+                let deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "X";
+                deleteBtn.classList.add("delete-btn");
+                deleteBtn.onclick = () => deleteTask(index);
+
+                li.appendChild(taskContent);
+                li.appendChild(deleteBtn);
+                taskList.appendChild(li);
+            });
+        }
+
+        function deleteTask(index) {
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            deletedTask = tasks[index]; // Save the deleted task
+            deletedTaskIndex = index;   // Save the index
+
+            tasks.splice(index, 1);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            loadTasks();
+
+            // Show Undo button for 5 seconds
+            let undoContainer = document.getElementById("undo-container");
+            undoContainer.style.display = "block";
+            setTimeout(() => {
+                undoContainer.style.display = "none";
+                deletedTask = null; // Clear after timeout
+                deletedTaskIndex = null;
+            }, 5000);
+        }
+
+        function undoDelete() {
+            if (deletedTask !== null) {
+                let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+                tasks.splice(deletedTaskIndex, 0, deletedTask); // Restore at original position
+                localStorage.setItem("tasks", JSON.stringify(tasks));
+                loadTasks();
+                document.getElementById("undo-container").style.display = "none";
+            }
+        }
+
+        function clearTasks() {
+            localStorage.removeItem("tasks");
+            loadTasks();
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("undo-btn").addEventListener("click", undoDelete);
+
+        window.onload = loadTasks;
+    </script>
+</body>
+</html>
+
+

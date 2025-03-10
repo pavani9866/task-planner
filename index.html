@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Planner</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #000;
+            --input-bg: #fff;
+            --btn-bg: #28a745;
+            --btn-text: #fff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: 0.3s;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: var(--input-bg);
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .theme-selector {
+            margin-top: 15px;
+        }
+
+        /* Dark Theme */
+        .dark {
+            --bg-color: #1e1e1e;
+            --text-color: #fff;
+            --input-bg: #333;
+            --btn-bg: #ffcc00;
+            --btn-text: #000;
+        }
+
+        /* Vibrant Theme */
+        .vibrant {
+            --bg-color: #ff8c00;
+            --text-color: #fff;
+            --input-bg: #ffdb58;
+            --btn-bg: #ff4500;
+            --btn-text: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Day Planner</h1>
+        <label>Choose Theme:</label>
+        <select id="theme-selector" class="theme-selector">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="vibrant">Vibrant</option>
+        </select>
+
+        <input type="text" id="task" placeholder="Enter your task">
+        <input type="date" id="due-date">
+
+        <label>From:
+            <select id="start-hour"></select> :
+            <select id="start-minute"></select>
+            <select id="start-ampm">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </label>
+
+        <label>To:
+            <select id="end-hour"></select> :
+            <select id="end-minute"></select>
+            <select id="end-ampm">
+                <option>AM</option>
+                <option>PM</option>
+            </select>
+        </label>
+
+        <label>Priority:
+            <select id="priority">
+                <option value="" disabled selected>Select Priority</option>
+                <option value="top">Top Priority</option>
+                <option value="middle">Middle Priority</option>
+                <option value="low">Less Priority</option>
+            </select>
+        </label>
+
+        <button onclick="addTask()">Add Task</button>
+        <button onclick="viewTasks()">View All Tasks</button>
+    </div>
+
+    <script>
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        console.log("Notification permission granted.");
+                    }
+                });
+            }
+        }
+
+        function populateTimeDropdowns() {
+            for (let i = 1; i <= 12; i++) {
+                document.getElementById('start-hour').innerHTML += `<option>${i}</option>`;
+                document.getElementById('end-hour').innerHTML += `<option>${i}</option>`;
+            }
+            for (let i = 0; i < 60; i += 5) {
+                let min = i < 10 ? "0" + i : i;
+                document.getElementById('start-minute').innerHTML += `<option>${min}</option>`;
+                document.getElementById('end-minute').innerHTML += `<option>${min}</option>`;
+            }
+        }
+
+        function addTask() {
+            let task = document.getElementById('task').value;
+            let dueDate = document.getElementById('due-date').value;
+            let startHour = parseInt(document.getElementById('start-hour').value);
+            let startMinute = parseInt(document.getElementById('start-minute').value);
+            let startAMPM = document.getElementById('start-ampm').value;
+            let priority = document.getElementById('priority').value;
+
+            if (!task || !dueDate) {
+                alert("Enter a task and due date!");
+                return;
+            }
+
+            if (startAMPM === "PM" && startHour !== 12) startHour += 12;
+            if (startAMPM === "AM" && startHour === 12) startHour = 0;
+
+            let taskTime = new Date(`${dueDate}T${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}:00`);
+            let currentTime = new Date();
+            let timeDiff = taskTime - currentTime;
+
+            if (timeDiff > 0) {
+                setTimeout(() => {
+                    sendNotification(task);
+                    playAlarm();
+                }, timeDiff);
+            }
+
+            let taskData = {
+                task,
+                dueDate,
+                startTime: `${startHour}:${startMinute} ${startAMPM}`,
+                priority
+            };
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+            tasks.push(taskData);
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+
+            alert("Task added successfully!");
+            document.getElementById("task").value = "";
+        }
+
+        function sendNotification(task) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("Task Reminder", {
+                    body: `Time for: ${task}!`,
+                    icon: "https://cdn-icons-png.flaticon.com/512/1828/1828640.png"
+                });
+            }
+        }
+
+        function playAlarm() {
+            let audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+            audio.play();
+        }
+
+        function viewTasks() {
+            window.location.href = "tasks.html"; 
+        }
+
+        function changeTheme(theme) {
+            document.body.className = theme;
+            localStorage.setItem("selectedTheme", theme);
+        }
+
+        document.getElementById("theme-selector").addEventListener("change", function () {
+            changeTheme(this.value);
+        });
+
+        window.onload = function () {
+            let savedTheme = localStorage.getItem("selectedTheme") || "light";
+            document.getElementById("theme-selector").value = savedTheme;
+            changeTheme(savedTheme);
+            populateTimeDropdowns();
+            requestNotificationPermission();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+/* Apply styles to the entire page */
+*  {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    body {
+        background-color: rgb(196, 59, 82);
+    } /* Sets a default text color */
+}
+
+/* Light Mode - Animated Multicolor Gradient */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(196, 59, 82); 
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+    color: #000;
+    transition: 0.3s ease-in-out;
+}
+
+/* Gradient Animation */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Dark Mode - Cool Galaxy Gradient */
+dark-mode {
+    background-color: rgba(12, 9, 9, 0);
+    color: #0a0909;
+}
+
+/* Container Styling */
+container {
+    background: rgba(210, 72, 72, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+    transition: 0.3s ease-in-out;
+}
+
+/* Dark Mode Container */
+dark-mode .container {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Input and Button Styles */
+input, select, button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    margin: 5px 0;
+    transition: 0.3s ease-in-out;
+}
+
+/* Dark Mode Inputs */
+dark-mode input, 
+dark-mode select, 
+dark-mode button {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+}
+
+/* Add Button */
+button {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Task List */
+task-list {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+task-list li {
+    background: #f9f9f9;
+    margin: 5px 0;
+    padding: 10px;
+    border-left: 5px solid gray;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    transition: 0.3s ease-in-out;
+}
+
+/* Priority Colors */
+priority-top { border-left-color: red; }
+priority-middle { border-left-color: orange; }
+priority-low { border-left-color: green; }
+
+/* Dark Mode Task List */
+dark-mode .task-list li {
+    background: #444;
+    color: #fff;
+}
+
+/* Task Completed */
+completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+    color: #888;
+}
+
+/* Delete Button */
+delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+delete-btn:hover {
+    background: darkred;
+}
+
+/* Dark Mode Button */
+dark-mode-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+dark-mode-btn:hover {
+    background: #555;
+}
