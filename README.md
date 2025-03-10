@@ -2,6 +2,31 @@
 # Task Planner
 
 A simple Task Planner web application built using **HTML, CSS, and JavaScript**. This app allows users to add tasks, set due dates, schedule times, and assign priority levels. It also supports **theme selection**, **task reminders with notifications**, and **alarm sounds**.
+Fundamentals 🏗️
+
+1️⃣ Technologies Used
+
+HTML: Structure of the application.
+
+CSS: Styling and theme management.
+
+JavaScript: Functionality, task scheduling, and notifications.
+
+Local Storage: Saves tasks and theme preferences.
+
+Git & GitHub: Version control and deployment.
+
+2️⃣ Core Functionalities
+
+Task Management: Add tasks with due dates, start and end times.
+
+Priority Levels: Assign priority to tasks.
+
+Theme Selection: Choose between Light, Dark, and Vibrant themes.
+
+Task Reminders: Notifications and alarms when a task is due.
+
+Local Storage: Saves tasks so they persist after page refresh.
 
 ## Features 🚀
 
@@ -10,6 +35,10 @@ A simple Task Planner web application built using **HTML, CSS, and JavaScript**.
 - 🔔 **Reminders & Notifications**: Get browser notifications and an alarm sound when the task is due.
 - 💾 **Local Storage**: Saves tasks and theme preferences across sessions.
 - 📅 **Dynamic Time Selection**: Select start and end times using dropdown menus.
+  
+##React day planner website
+
+
 
 ## Installation 💻
 
